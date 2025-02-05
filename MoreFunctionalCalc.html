@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      .calculator {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .calculator label {
+        display: block;
+        margin: 10px 0 5px;
+      }
+
+      .calculator input,
+      .calculator select {
+        width: 95%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .calculator button {
+        width: 100%;
+        padding: 10px;
+        background-color: #212888;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .calculator button:hover {
+        background-color: #212888;
+      }
+
+      .result {
+        margin-top: 20px;
+      }
+
+      .ip-info {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="calculator">
+      <h2>Price Calculator</h2>
+
+      <label for="items">Number of items:</label>
+      <input
+        type="number"
+        id="items"
+        placeholder="Enter the number of items"
+      />
+
+      <label for="price">Price per item:</label>
+      <input
+        type="number"
+        id="price"
+        placeholder="Enter the price per item"
+      />
+
+      <label for="state">Select your state:</label>
+      <select id="state">
+        <option value="CA">California (CA)</option>
+        <option value="UT">Utah (UT)</option>
+        <option value="NV">Nevada (NV)</option>
+        <option value="TX">Texas (TX)</option>
+        <option value="AL">Alabama (AL)</option>
+        <option value="manual">Enter manually</option>
+      </select>
+
+      <label for="manual-state" style="display: none;">State code (manual):</label>
+      <input
+        type="text"
+        id="manual-state"
+        placeholder="Enter state code (e.g., UT, NV)"
+        maxlength="2"
+        style="display: none;"
+      />
+
+      <label for="tax">Tax Rate (%):</label>
+      <input
+        type="number"
+        id="tax"
+        placeholder="Enter tax percentage (if manual)"
+      />
+
+      <label for="discount">Discount (%):</label>
+      <input
+        type="number"
+        id="discount"
+        placeholder="Enter discount percentage (optional)"
+      />
+
+      <button onclick="calculate()">Calculate</button>
+
+      <div class="result" id="result"></div>
+
+      <div class="ip-info">
+        <p>Your IP Address: <span id="ip"></span></p>
+        <p>Your detected state: <span id="detected-state"></span></p>
+      </div>
+    </div>
+
+    <script>
+      // Set price when product button is clicked
+      function setProductPrice(price) {
+        document.getElementById('price').value = price;
+      }
+
+      // Fetch user state and IP based on geolocation API
+      function detectUserState() {
+        fetch('https://ipinfo.io/json?token=YOUR_API_TOKEN') // Replace with your actual token
+          .then(response => response.json())
+          .then(data => {
+            const userState = data.region_code; // Region code from IP info (e.g., CA, TX)
+            const userIP = data.ip;
+
+            document.getElementById('ip').textContent = userIP;
+            document.getElementById('detected-state').textContent = data.region;
+
+            // Auto select the detected state
+            if (userState) {
+              document.getElementById('state').value = userState;
+            }
+          })
+          .catch(error => console.error('Error fetching user location:', error));
+      }
+
+      document.getElementById('state').addEventListener('change', function () {
+        const state = document.getElementById('state').value;
+        if (state === 'manual') {
+          document.getElementById('manual-state').style.display = 'block';
+        } else {
+          document.getElementById('manual-state').style.display = 'none';
+        }
+      });
+
+      function calculate() {
+        const items = parseFloat(document.getElementById('items').value);
+        const price = parseFloat(document.getElementById('price').value);
+        let state = document.getElementById('state').value;
+        const manualState = document.getElementById('manual-state').value;
+        const taxInput = parseFloat(document.getElementById('tax').value);
+        const discountInput = parseFloat(document.getElementById('discount').value);
+
+        if (state === 'manual' && manualState.length === 2) {
+          state = manualState.toUpperCase();
+        }
+
+        if (isNaN(items) || isNaN(price) || !state) {
+          alert('Please enter valid data.');
+          return;
+        }
+
+        let total = items * price;
+
+        let discount = discountInput || 0; // Use the manual discount if provided
+        const discountAmount = total * (discount / 100);
+        const discountedPrice = total - discountAmount;
+
+        // Default tax rates for states
+        const taxRates = {
+          UT: 6.85,
+          NV: 8.0,
+          TX: 6.25,
+          AL: 4.0,
+          CA: 8.25,
+        };
+
+        // Use the provided tax rate if manually entered, otherwise fetch by state
+        const taxRate = taxInput || taxRates[state] || 0;
+        const taxAmount = discountedPrice * (taxRate / 100);
+
+        const finalPrice = discountedPrice + taxAmount;
+
+        document.getElementById('result').innerHTML = `
+          <p>Initial price: $${total.toFixed(2)}</p>
+          <p>Discount: ${discount}% (-$${discountAmount.toFixed(2)})</p>
+          <p>Price after discount: $${discountedPrice.toFixed(2)}</p>
+          <p>Tax (${taxRate}%): $${taxAmount.toFixed(2)})</p>
+          <h3>Final price: $${finalPrice.toFixed(2)}</h3>
+        `;
+      }
+
+      // Auto-detect user state and IP on page load
+      window.onload = detectUserState;
+    </script>
+  </body>
+</html>
