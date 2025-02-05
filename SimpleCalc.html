@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Price Calculator</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+
+            .calculator {
+                max-width: 400px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .calculator label {
+                display: block;
+                margin: 10px 0 5px;
+            }
+
+            .calculator input {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .calculator button {
+                width: 100%;
+                padding: 10px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .calculator button:hover {
+                background-color: #218838;
+            }
+
+            .result {
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calculator">
+            <h2>Price Calculator</h2>
+            <label for="items">Number of items:</label>
+            <input
+                type="number"
+                id="items"
+                placeholder="Enter the number of items"
+            />
+
+            <label for="price">Price per item:</label>
+            <input
+                type="number"
+                id="price"
+                placeholder="Enter the price per item"
+            />
+
+            <label for="state">State code (2 letters):</label>
+            <input
+                type="text"
+                id="state"
+                placeholder="Enter state code (e.g., UT, NV)"
+                maxlength="2"
+            />
+
+            <button onclick="calculate()">Calculate</button>
+
+            <div class="result" id="result"></div>
+        </div>
+
+        <script>
+            function calculate() {
+                const items = parseFloat(
+                    document.getElementById("items").value
+                );
+                const price = parseFloat(
+                    document.getElementById("price").value
+                );
+                const state = document
+                    .getElementById("state")
+                    .value.toUpperCase();
+
+                if (isNaN(items) || isNaN(price) || state.length !== 2) {
+                    alert("Please enter valid data.");
+                    return;
+                }
+
+                let total = items * price;
+
+                let discount = 0;
+                if (total >= 50000) discount = 15;
+                else if (total >= 10000) discount = 10;
+                else if (total >= 7000) discount = 7;
+                else if (total >= 5000) discount = 5;
+                else if (total >= 1000) discount = 3;
+
+                const discountAmount = total * (discount / 100);
+                const discountedPrice = total - discountAmount;
+
+                const taxRates = {
+                    UT: 6.85,
+                    NV: 8.0,
+                    TX: 6.25,
+                    AL: 4.0,
+                    CA: 8.25,
+                };
+
+                const taxRate = taxRates[state] || 0;
+                const taxAmount = discountedPrice * (taxRate / 100);
+
+                const finalPrice = discountedPrice + taxAmount;
+
+                document.getElementById("result").innerHTML = `
+            <p>Initial price: $${total.toFixed(2)}</p>
+            <p>Discount: ${discount}% (-$${discountAmount.toFixed(2)})</p>
+            <p>Price after discount: $${discountedPrice.toFixed(2)}</p>
+            <p>Tax (${taxRate}%): $${taxAmount.toFixed(2)}</p>
+            <h3>Final price: $${finalPrice.toFixed(2)}</h3>
+        `;
+            }
+        </script>
+    </body>
+</html>
