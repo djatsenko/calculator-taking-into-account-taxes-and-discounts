@@ -1,0 +1,80 @@
+Whats the point?
+
+Product:
+Accept 3 inputs from user:
+  1. How many items
+  2. Price per item
+  3. 2-letter state code
+
+ **Output the total price. Give a discount based on the total price, add state tax based on the state and discounted price.**
+
+ **Order Value**   1000$   5000$   7000$   10000$   50000$
+ **Discount rate** 3%      5%      7%      10%      15%
+
+
+ **State**      UT       NV       TX       AL       CA
+ **Tax Rate**   6.85%    8.00%    6.25%    4.00%    8.25%
+
+
+
+*ENG*
+Input data:
+Quantity of items.
+Price per item.
+Two-letter state code (e.g. UT, NV, TX, etc.).
+How it works:
+The calculator should calculate the total cost based on the quantity of items and their price.
+Apply a discount based on the total order cost:
+Up to $1,000 — 3% discount.
+Up to $5,000 — 5% discount.
+Up to $7,000 — 7% discount.
+Up to $10,000 — 10% discount.
+Up to $50,000 — 15% discount.
+Apply state tax to the total (after discount):
+UT — 6.85%.
+NV — 8.00%.
+TX — 6.25%.
+AL — 4.00%.
+CA — 8.25%.
+
+
+*RUS*
+Входные данные:
+Количество товаров.
+Цена за товар.
+Двухбуквенный код штата (например, UT, NV, TX и т.д.).
+Логика работы:
+Калькулятор должен рассчитать общую стоимость, исходя из количества товаров и их цены.
+Применить скидку, основываясь на суммарной стоимости заказа:
+До $1,000 — скидка 3%.
+До $5,000 — скидка 5%.
+До $7,000 — скидка 7%.
+До $10,000 — скидка 10%.
+До $50,000 — скидка 15%.
+Применить налог штата на итоговую сумму (после скидки):
+UT — 6.85%.
+NV — 8.00%.
+TX — 6.25%.
+AL — 4.00%.
+CA — 8.25%.
+
+
+*EST*
+Sisendandmed:
+Kaupade arv.
+Hind tootele.
+Kahetäheline olekukood (nt UT, NV, TX jne).
+Toimimisloogika:
+Kalkulaator peaks kogumaksumuse arvutama kaupade arvu ja nende hinna alusel.
+Rakenda allahindlust tellimuse koguväärtuse alusel:
+Kuni 1000 dollarit – 3% allahindlust.
+Kuni $ 5000 - 5% allahindlust.
+Kuni 7000 dollarit – 7% allahindlust.
+Kuni $ 10 000 - 10% allahindlust.
+Kuni 50 000 dollarit – 15% allahindlust.
+Rakenda riigimaks lõppsummale (pärast allahindlust):
+TÜ — 6,85%.
+NV — 8,00%.
+TX — 6,25%.
+AL — 4,00%.
+CA — 8,25%.
